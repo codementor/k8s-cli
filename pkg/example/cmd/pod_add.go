@@ -64,7 +64,6 @@ func (p *podAddCmd) run(name string) error {
 	podsClient := client.CoreV1().Pods(apiv1.NamespaceDefault)
 
 	pod := &apiv1.Pod{
-		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:   name,
 			Labels: map[string]string{"app": "demo"},
