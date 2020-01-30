@@ -2,9 +2,14 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 	"io"
 
 	"github.com/spf13/cobra"
+	apiv1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+	"github.com/codementor/k8s-cli/pkg/example/env"
 )
 
 const (
@@ -15,14 +20,14 @@ const (
 )
 
 type podAddCmd struct {
-	interactive bool
-	out         io.Writer
+	image string
+	out   io.Writer
 }
 
 // newPodAddCmd adds a pod to the cluster
 func newPodAddCmd(out io.Writer) *cobra.Command {
 
-	pkg := &podAddCmd{out: out}
+	p := &podAddCmd{out: out}
 	cmd := &cobra.Command{
 		Use:     "add",
 		Short:   "adds a pod to the cluster",
@@ -32,7 +37,7 @@ func newPodAddCmd(out io.Writer) *cobra.Command {
 			if err := validateArgs(args); err != nil {
 				return err
 			}
-			if err := pkg.run(args); err != nil {
+			if err := p.run(args[0]); err != nil {
 				return err
 			}
 			return nil
@@ -40,18 +45,45 @@ func newPodAddCmd(out io.Writer) *cobra.Command {
 	}
 
 	f := cmd.Flags()
-	f.BoolVarP(&pkg.interactive, "interactive", "i", false, "Interactive mode.")
+	f.StringVar(&p.image, "image", "nginx", "image to be used in creation of pod")
 	return cmd
 }
 
 func validateArgs(args []string) error {
-	if len(args) == 1 {
-		return errors.New("expecting 1 argument - name of pod`")
+	if len(args) != 1 {
+		return errors.New("expecting 1 argument - name of pod")
 	}
 	return nil
+
 }
 
 // run returns the errors associated with cmd env
-func (pkg *podAddCmd) run(args []string) error {
+func (p *podAddCmd) run(name string) error {
+	client := env.NewClientSet(&Settings)
+
+	podsClient := client.CoreV1().Pods(apiv1.NamespaceDefault)
+
+	pod := &apiv1.Pod{
+		TypeMeta: metav1.TypeMeta{},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:   name,
+			Labels: map[string]string{"app": "demo"},
+		},
+		Spec: apiv1.PodSpec{
+			Containers: []apiv1.Container{
+				{
+					Name:  name,
+					Image: p.image,
+				},
+			},
+		},
+	}
+
+	pp, err := podsClient.Create(pod)
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(p.out, "Pod %v created with rev: %v\n", pp.Name, pp.ResourceVersion)
 	return nil
 }

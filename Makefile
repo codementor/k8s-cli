@@ -37,9 +37,6 @@ endif
 download:
 	go mod download
 
-.PHONY: prebuild
-prebuild: generate lint
-
 
 .PHONY: cli-fast
 # Build CLI but don't lint or run code generation first.
@@ -48,7 +45,7 @@ cli-fast:
 
 .PHONY: cli
 # Build CLI
-cli: prebuild cli-fast
+cli: cli-fast
 
 .PHONY: cli-clean
 # Clean CLI build

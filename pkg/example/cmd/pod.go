@@ -11,6 +11,7 @@ This command consists of multiple sub-commands to interact with Pods.
 `
 
 const podExamples = `  kubectl example pod list [flags]
+  kubectl example pod list2 [flags]
   kubectl example pod add [name] [flags]
 `
 
@@ -25,6 +26,7 @@ func newPodCmd(out io.Writer) *cobra.Command {
 
 	cmd.AddCommand(newPodAddCmd(out))
 	cmd.AddCommand(newPodListCmd(out))
+	cmd.AddCommand(newPodList2Cmd(out))
 
 	return cmd
 }

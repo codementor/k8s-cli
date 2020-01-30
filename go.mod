@@ -7,9 +7,11 @@ require (
 	github.com/go-bindata/go-bindata v3.1.2+incompatible
 	github.com/gogo/protobuf v1.3.1 // indirect
 	github.com/googleapis/gnostic v0.3.1 // indirect
+	github.com/gosuri/uitable v0.0.4
 	github.com/imdario/mergo v0.3.7 // indirect
 	github.com/mattn/go-colorable v0.1.4 // indirect
 	github.com/mattn/go-isatty v0.0.10 // indirect
+	github.com/mattn/go-runewidth v0.0.8 // indirect
 	github.com/onsi/ginkgo v1.10.1 // indirect
 	github.com/onsi/gomega v1.7.1 // indirect
 	github.com/spf13/cobra v0.0.5
@@ -23,8 +25,10 @@ require (
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/yaml.v2 v2.2.7 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20191106092431-e228e37189d3 // indirect
+	k8s.io/api v0.0.0-20191016110408-35e52d86657a
 	k8s.io/apiextensions-apiserver v0.0.0-20191016113550-5357c4baaf65
-	k8s.io/apimachinery v0.0.0-20191028221656-72ed19daf4bb // indirect
+	k8s.io/apimachinery v0.0.0-20191028221656-72ed19daf4bb
+	k8s.io/apiserver v0.0.0-20191016112112-5190913f932d
 	k8s.io/client-go v11.0.0+incompatible
 	k8s.io/code-generator v0.18.0-alpha.1.0.20191220033320-6b257a9d6f46
 	sigs.k8s.io/controller-tools v0.2.4
