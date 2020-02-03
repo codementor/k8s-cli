@@ -5,11 +5,6 @@ import (
 	"io"
 
 	"github.com/spf13/cobra"
-	apiv1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	v1 "k8s.io/apiserver/pkg/apis/example/v1"
-
-	"github.com/codementor/k8s-cli/pkg/example/env"
 )
 
 const (
@@ -20,7 +15,7 @@ const (
 )
 
 type podListCmd struct {
-	status bool
+	// status boolean
 	out    io.Writer
 }
 
@@ -40,8 +35,8 @@ func newPodListCmd(out io.Writer) *cobra.Command {
 		},
 	}
 
-	f := cmd.Flags()
-	f.BoolVarP(&pkg.status, "status", "i", true, "display status info")
+	// status flag
+
 	return cmd
 }
 
@@ -61,35 +56,15 @@ func newPodList2Cmd(out io.Writer) *cobra.Command {
 		},
 	}
 
-	f := cmd.Flags()
-	f.BoolVarP(&pkg.status, "status", "i", true, "display status info")
+	// status flag
+
 	return cmd
 }
 
 // run 1st approach at list pods
 func (p *podListCmd) run() error {
 
-	client := env.NewClientSet(&Settings)
-	podsClient := client.CoreV1().Pods(apiv1.NamespaceDefault)
-
-	list, err := podsClient.List(metav1.ListOptions{})
-	if err != nil {
-		return err
-	}
-
-	if len(list.Items) == 0 {
-		fmt.Printf("no pods discovered\n")
-		return nil
-	}
-	for _, item := range list.Items {
-		if p.status {
-			fmt.Fprintf(p.out, "pod %v in namespace: %v, status: %v\n", item.Name, item.Namespace, item.Status.Phase)
-
-		} else {
-			fmt.Fprintf(p.out, "pod %v in namespace: %v\n", item.Name, item.Namespace)
-
-		}
-	}
+	fmt.Printf("add pod list code using direct object references\n")
 	return nil
 }
 
@@ -98,28 +73,6 @@ func (p *podListCmd) run2() error {
 
 	//REST Client approach
 
-	client := env.NewRestClient(&Settings)
-	result := &v1.PodList{}
-
-	err := client.Get().
-		Namespace(apiv1.NamespaceDefault).
-		Resource("pods").
-		Do().
-		Into(result)
-	if err != nil {
-		return err
-	}
-	if len(result.Items) == 0 {
-		fmt.Printf("no pods discovered\n")
-		return nil
-	}
-	for _, item := range result.Items {
-		if p.status {
-			fmt.Fprintf(p.out, "pod %v in namespace: %v, status: %v\n", item.Name, item.Namespace, item.Status.Phase)
-
-		} else {
-			fmt.Fprintf(p.out, "pod %v in namespace: %v\n", item.Name, item.Namespace)
-		}
-	}
+	fmt.Printf("add pod list code using the rest client\n")
 	return nil
 }
